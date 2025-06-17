@@ -40,25 +40,5 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-userSchema.methods = {
-  generateJwtToken: async function () {
-    if (!process.env.JWT_SECRET) {
-      throw new Error('JWT_SECRET is not defined');
-    }
-    const token = jwt.sign(
-      { id: this._id, name: this.name, email: this.email },
-      process.env.JWT_SECRET as string,
-      { expiresIn: process.env.JWT_EXPIRY || '1d' }
-    );
-
-    return token;
-  },
-
-  comparePassword: async function (plainTextPassword: string) {
-    const result = await bcrypt.compare(plainTextPassword, this.password);
-    return result;
-  },
-};
-
 const User = model('User', userSchema);
 export default User;
