@@ -1,9 +1,10 @@
 "use client";
 
-import { getDetails } from "@/context/dataContext"
+import { getDetails } from "@/context/companyDataContext"
 import { useEffect, useState } from "react"
 
 type CompanyData = {
+  _id?: string;
   shopName?: string;
   addressLine1?: string;
   addressLine2?: string;
@@ -11,6 +12,7 @@ type CompanyData = {
   city?: string;
   phone?: number
   pincode?: number
+  companyName?: string
 };
 
 export default function CompanyDetails () {
@@ -43,6 +45,9 @@ export default function CompanyDetails () {
               <div>{item.city}</div>
               <div>{item.pincode}</div>
               <div>{item.phone}</div>
+              <>
+               
+              </>
             </div>
           )
         })
