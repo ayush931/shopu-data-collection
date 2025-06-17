@@ -1,8 +1,13 @@
 import { connectToDB } from "@/config/dbConnection";
+import { generateToken } from "@/lib/token.lib";
 import User from "@/models/user.model";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+
+interface TokenPayload {
+  userId: string;
+  email: string;
+}
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
@@ -30,15 +35,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid Password" }, { status: 400 });
   }
 
-  if (!process.env.JWT_SECRET) {
-    throw new Error("JWT_SECRET not defined");
-  }
-
-  const token = jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRY || "7d" }
-  );
+  // Generate token with properly typed payload
+  const userPayload: TokenPayload = {
+    userId: user._id.toString(),
+    email: user.email,
+  };
+  const token = generateToken(userPayload);
 
   if (!token) {
     return NextResponse.json({ error: "Token not generated" }, { status: 400 });
