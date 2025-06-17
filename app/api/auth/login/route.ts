@@ -25,7 +25,6 @@ export async function POST (request: NextRequest) {
     )
   }
 
-  //@ts-ignore
   const validatePassword = await user.comparePassword(password);
 
   if (!validatePassword) {
@@ -35,7 +34,6 @@ export async function POST (request: NextRequest) {
     )
   }
 
-  //@ts-ignore
   const token = await user.generateJwtToken();
 
   if (!token) {
