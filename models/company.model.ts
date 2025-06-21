@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const companySchema = new Schema(
   {
@@ -32,7 +32,7 @@ const companySchema = new Schema(
 
     companyName: [
       {
-        type: Schema.Types.ObjectId, // Change to ObjectId for referencing
+        type: mongoose.Schema.Types.ObjectId, // Change to ObjectId for referencing
         ref: 'CompanyName', // Reference the CompanyName model
       },
     ],
@@ -42,5 +42,5 @@ const companySchema = new Schema(
   }
 );
 
-const Company = model('Company', companySchema);
+const Company = mongoose.model('Company', companySchema);
 export default Company;
