@@ -15,6 +15,6 @@ export default function LogoutButton () {
   }
 
   return (
-    <button onClick={() => handleSubmit()} className="border border-black">Logout</button>
+    <button onClick={() => handleSubmit()} className="border border-black px-5 py-1">Logout</button>
   )
 }
