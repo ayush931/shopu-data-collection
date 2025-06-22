@@ -39,7 +39,7 @@ export default function Form() {
     };
 
     fetchedData();
-  }, []);
+  }, [router]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

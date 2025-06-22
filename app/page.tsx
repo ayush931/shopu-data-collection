@@ -21,7 +21,7 @@ export default function Home() {
     if (token) {
       router.push('/form'); // Redirect to form page if token exists
     }
-  }, []);
+  }, [router]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
