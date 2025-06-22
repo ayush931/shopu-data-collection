@@ -4,9 +4,12 @@ import React, { useState } from "react";
 import { login } from "@/context/AuthContext";
 import LogoutButton from "@/components/Logout";
 import { useRouter } from "next/navigation";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 export default function Home() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false)
 
   const [formData, setFormData] = useState({
     email: "",
@@ -51,7 +54,7 @@ export default function Home() {
               required
             />
           </div>
-          <div>
+          <div className="relative">
             <label
               htmlFor="password"
               className="block text-sm font-medium mb-1"
@@ -59,13 +62,18 @@ export default function Home() {
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={onChangeInput}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="relative w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-9">
+              {
+                showPassword ? <FaEye /> : <FaEyeSlash />
+              }
+            </button>
           </div>
           <button
             type="submit"

@@ -4,9 +4,10 @@ import LogoutButton from "@/components/Logout";
 import { createCompany, getCompanyName } from "@/context/companyDataContext";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Form() {
-  // const className = "border border-black";
+  const router = useRouter();
   type Company = { _id: string; name: string };
 
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -25,6 +26,13 @@ export default function Form() {
 
   useEffect(() => {
     const fetchedData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login first");
+        router.push("/"); // Redirect to login page
+        return;
+      }
+
       const response = await getCompanyName();
       if (response?.success) {
         console.log(response.data.companyNameDetails);

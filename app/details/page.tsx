@@ -2,6 +2,7 @@
 
 import { getDetails } from "@/context/companyDataContext";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type CompanyData = {
   _id?: string;
@@ -16,10 +17,18 @@ type CompanyData = {
 };
 
 export default function CompanyDetails() {
+  const router = useRouter();
   const [companyData, setCompanyData] = useState<CompanyData[]>([]);
 
   useEffect(() => {
     const fetchedData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login first");
+        router.push("/"); // Redirect to login page
+        return;
+      }
+
       const response = await getDetails();
       if (response?.success) {
         alert(response.message);
