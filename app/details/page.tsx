@@ -38,7 +38,7 @@ export default function CompanyDetails() {
     };
 
     fetchedData();
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
