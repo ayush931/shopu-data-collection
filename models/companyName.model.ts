@@ -1,11 +1,11 @@
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
 const companyNameSchema = new Schema({
   name: {
     type: String,
-    required: [true, "Provide company name"],
+    required: [true, 'Provide company name'],
   },
 });
 
-const CompayName = model("CompanyName", companyNameSchema);
+const CompayName = model('CompanyName', companyNameSchema);
 export default CompayName;

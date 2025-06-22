@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { login } from "@/context/AuthContext";
-import LogoutButton from "@/components/Logout";
-import { useRouter } from "next/navigation";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import React, { useState, useEffect } from 'react';
+import { login } from '@/context/AuthContext';
+import LogoutButton from '@/components/Logout';
+import { useRouter } from 'next/navigation';
+import { FaEye } from 'react-icons/fa';
+import { FaEyeSlash } from 'react-icons/fa';
 
 export default function Home() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
-      router.push("/form"); // Redirect to form page if token exists
+      router.push('/form'); // Redirect to form page if token exists
     }
   }, []);
 
@@ -39,7 +39,7 @@ export default function Home() {
 
     if (result?.success) {
       alert(result.message);
-      router.push("/form");
+      router.push('/form');
     }
   };
 
@@ -69,7 +69,7 @@ export default function Home() {
               Password
             </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               name="password"
               value={formData.password}
               onChange={onChangeInput}

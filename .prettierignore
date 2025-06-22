@@ -1,0 +1,22 @@
+# Ignore artifacts
+node_modules
+build
+dist
+coverage
+
+# Ignore config and env files
+*.log
+*.env
+
+# Ignore specific file types
+package-lock.json
+yarn.lock
+
+# Ignore generated folders
+.next
+out
+public
+
+# Optional: Ignore entire IDE config folders
+.vscode
+.idea

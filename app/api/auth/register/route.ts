@@ -1,13 +1,13 @@
-import { connectToDB } from "@/config/dbConnection";
-import User from "@/models/user.model";
-import { NextRequest, NextResponse } from "next/server";
+import { connectToDB } from '@/config/dbConnection';
+import User from '@/models/user.model';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { name, email, password, phone } = await request.json();
 
   if (!name || !email || !password || !phone) {
     return NextResponse.json(
-      { error: "Provide all the details" },
+      { error: 'Provide all the details' },
       { status: 400 }
     );
   }
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
   if (checkUser) {
     return NextResponse.json(
-      { error: "User already exists, Please login" },
+      { error: 'User already exists, Please login' },
       { status: 400 }
     );
   }
@@ -32,18 +32,18 @@ export async function POST(request: NextRequest) {
 
   if (!user) {
     return NextResponse.json(
-      { error: "User not created, Please try again" },
+      { error: 'User not created, Please try again' },
       { status: 400 }
     );
   }
 
   await user.save();
 
-  user.password = "";
+  user.password = '';
 
   const response = NextResponse.json({
     success: true,
-    message: "User registered successfully",
+    message: 'User registered successfully',
   });
 
   return response;

@@ -1,15 +1,15 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const getDetails = async () => {
-  const response = await fetch("/api/company/get", {
-    method: "GET",
-    credentials: "include",
+  const response = await fetch('/api/company/get', {
+    method: 'GET',
+    credentials: 'include',
   });
 
   if (!response.ok) {
     return {
       success: false,
-      message: "Failed to fetch the details",
+      message: 'Failed to fetch the details',
     };
   }
 
@@ -17,21 +17,21 @@ export const getDetails = async () => {
 
   return {
     success: true,
-    message: "Company details fetched",
+    message: 'Company details fetched',
     data,
   };
 };
 
 export const getCompanyName = async () => {
-  const response = await fetch("/api/companyName/get", {
-    method: "GET",
-    credentials: "include",
+  const response = await fetch('/api/companyName/get', {
+    method: 'GET',
+    credentials: 'include',
   });
 
   if (!response.ok) {
     return {
       success: false,
-      message: "Failed to fetch company details",
+      message: 'Failed to fetch company details',
     };
   }
 
@@ -39,33 +39,33 @@ export const getCompanyName = async () => {
 
   return {
     success: true,
-    message: "Company Names is fetched",
+    message: 'Company Names is fetched',
     data,
   };
 };
 
 export const createCompany = async (formData: Record<string, unknown>) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
   if (!token) {
     return {
       success: false,
-      message: "Login first",
+      message: 'Login first',
     };
   }
 
-  const response = await axios.post("/api/company/create", formData, {
+  const response = await axios.post('/api/company/create', formData, {
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 
   if (!response) {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     return {
       success: false,
-      message: "Not able to recognized user",
+      message: 'Not able to recognized user',
     };
   }
 

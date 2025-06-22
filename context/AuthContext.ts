@@ -1,8 +1,8 @@
 export const login = async (email: string, password: string) => {
-  const response = await fetch("/api/auth/login", {
-    method: "POST",
+  const response = await fetch('/api/auth/login', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
   });
@@ -12,22 +12,22 @@ export const login = async (email: string, password: string) => {
   if (!response.ok) {
     return {
       success: false,
-      message: "Login failed",
+      message: 'Login failed',
     };
   }
-  
-  localStorage.setItem("token", data.token);
+
+  localStorage.setItem('token', data.token);
 
   return {
     success: true,
-    message: 'Login successfull'
-  }
+    message: 'Login successfull',
+  };
 };
 
 export const logout = async () => {
-  const response = await fetch("/api/auth/logout", {
-    method: "GET",
-    credentials: "include",
+  const response = await fetch('/api/auth/logout', {
+    method: 'GET',
+    credentials: 'include',
   }).catch((error) => {
     console.log(error);
   });
@@ -35,14 +35,14 @@ export const logout = async () => {
   if (!response) {
     return {
       success: false,
-      message: "Logout failed",
+      message: 'Logout failed',
     };
   }
 
-  localStorage.removeItem("token");
+  localStorage.removeItem('token');
 
   return {
     success: true,
-    message: 'Logout successfull'
-  }
+    message: 'Logout successfull',
+  };
 };

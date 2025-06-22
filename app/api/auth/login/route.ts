@@ -1,8 +1,8 @@
-import { connectToDB } from "@/config/dbConnection";
-import { generateToken } from "@/lib/token.lib";
-import User from "@/models/user.model";
-import bcrypt from "bcryptjs";
-import { NextRequest, NextResponse } from "next/server";
+import { connectToDB } from '@/config/dbConnection';
+import { generateToken } from '@/lib/token.lib';
+import User from '@/models/user.model';
+import bcrypt from 'bcryptjs';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface TokenPayload {
   userId: string;
@@ -14,25 +14,25 @@ export async function POST(request: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      { error: "Email and password are required" },
+      { error: 'Email and password are required' },
       { status: 400 }
     );
   }
 
   await connectToDB();
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select('+password');
 
   console.log(user?.password);
 
   if (!user) {
-    return NextResponse.json({ error: "Please register" }, { status: 400 });
+    return NextResponse.json({ error: 'Please register' }, { status: 400 });
   }
 
   const validatePassword = await bcrypt.compare(password, user.password);
 
   if (!validatePassword) {
-    return NextResponse.json({ error: "Invalid Password" }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid Password' }, { status: 400 });
   }
 
   // Generate token with properly typed payload
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
   const token = generateToken(userPayload);
 
   if (!token) {
-    return NextResponse.json({ error: "Token not generated" }, { status: 400 });
+    return NextResponse.json({ error: 'Token not generated' }, { status: 400 });
   }
 
   const response = NextResponse.json({
@@ -55,16 +55,16 @@ export async function POST(request: NextRequest) {
       phone: user.phone,
     },
     success: true,
-    message: "Logged in successfully",
+    message: 'Logged in successfully',
   });
 
   response.cookies.set({
-    name: "token",
+    name: 'token',
     value: token,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === 'production',
     sameSite: true,
-    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day in milliseconds
   });
 
   return response;

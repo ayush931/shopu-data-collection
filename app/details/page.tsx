@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { getDetails } from "@/context/companyDataContext";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { getDetails } from '@/context/companyDataContext';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type CompanyData = {
   _id?: string;
@@ -22,10 +22,10 @@ export default function CompanyDetails() {
 
   useEffect(() => {
     const fetchedData = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("Session expired. Please login again.");
-        router.push("/"); // Redirect to login page
+        alert('Session expired. Please login again.');
+        router.push('/'); // Redirect to login page
         return;
       }
 
@@ -52,15 +52,15 @@ export default function CompanyDetails() {
                 className="bg-gray-50 rounded-lg p-4 shadow mb-4 flex flex-col gap-2"
               >
                 <div>
-                  <span className="font-semibold">Shop Name:</span>{" "}
+                  <span className="font-semibold">Shop Name:</span>{' '}
                   {item.shopName}
                 </div>
                 <div>
-                  <span className="font-semibold">Address Line 1:</span>{" "}
+                  <span className="font-semibold">Address Line 1:</span>{' '}
                   {item.addressLine1}
                 </div>
                 <div>
-                  <span className="font-semibold">Address Line 2:</span>{" "}
+                  <span className="font-semibold">Address Line 2:</span>{' '}
                   {item.addressLine2}
                 </div>
                 <div>
@@ -76,10 +76,10 @@ export default function CompanyDetails() {
                   <span className="font-semibold">Phone:</span> {item.phone}
                 </div>
                 <div>
-                  <span className="font-semibold">Company Name:</span>{" "}
+                  <span className="font-semibold">Company Name:</span>{' '}
                   {item.companyName && Array.isArray(item.companyName)
-                    ? item.companyName.map((company) => company.name).join(", ")
-                    : "No company name selected"}
+                    ? item.companyName.map((company) => company.name).join(', ')
+                    : 'No company name selected'}
                 </div>
               </div>
             ))

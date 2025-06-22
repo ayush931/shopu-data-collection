@@ -1,36 +1,39 @@
 import { model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide the name'],
-    trim: true,
-  },
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please provide the name'],
+      trim: true,
+    },
 
-  email: {
-    type: String,
-    required: [true, 'Please provide email'],
-    trim: true,
-    lowercase: true,
-    unique: [true, 'Email already used'],
-  },
+    email: {
+      type: String,
+      required: [true, 'Please provide email'],
+      trim: true,
+      lowercase: true,
+      unique: [true, 'Email already used'],
+    },
 
-  password: {
-    type: String,
-    required: [true, 'Please provide password'],
-    trim: true,
-    select: false,
-  },
+    password: {
+      type: String,
+      required: [true, 'Please provide password'],
+      trim: true,
+      select: false,
+    },
 
-  phone: {
-    type: Number,
-    required: [true, 'Please provide phone number'],
-    trim: true,
+    phone: {
+      type: Number,
+      required: [true, 'Please provide phone number'],
+      trim: true,
+    },
   },
-}, {
-  timestamps: true
-});
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {

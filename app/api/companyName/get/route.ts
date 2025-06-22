@@ -1,16 +1,13 @@
-import { connectToDB } from "@/config/dbConnection";
-import { verifyToken } from "@/lib/auth.lib";
-import CompayName from "@/models/companyName.model";
-import { NextRequest, NextResponse } from "next/server";
+import { connectToDB } from '@/config/dbConnection';
+import { verifyToken } from '@/lib/auth.lib';
+import CompayName from '@/models/companyName.model';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET (request: NextRequest) {
+export async function GET(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
 
   if (!token) {
-    return NextResponse.json(
-      { error: 'Login first' },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: 'Login first' }, { status: 400 });
   }
 
   const payload = await verifyToken(token);
@@ -19,7 +16,7 @@ export async function GET (request: NextRequest) {
     return NextResponse.json(
       { error: 'Login with correct credentials' },
       { status: 400 }
-    )
+    );
   }
 
   await connectToDB();
@@ -30,12 +27,12 @@ export async function GET (request: NextRequest) {
     return NextResponse.json(
       { error: 'Unable to fetch company name details' },
       { status: 400 }
-    )
+    );
   }
 
   return NextResponse.json({
     success: true,
     message: 'Company name details fetched',
-    companyNameDetails
-  })
+    companyNameDetails,
+  });
 }

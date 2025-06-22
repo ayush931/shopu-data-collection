@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import LogoutButton from "@/components/Logout";
-import { createCompany, getCompanyName } from "@/context/companyDataContext";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import LogoutButton from '@/components/Logout';
+import { createCompany, getCompanyName } from '@/context/companyDataContext';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Form() {
   const router = useRouter();
   type Company = { _id: string; name: string };
 
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCompanies, setSelectedCompanies] = useState<Company[]>([]);
   const [showDropDown, setShowDropDown] = useState(false);
   const [formData, setFormData] = useState({
-    shopName: "",
-    addressLine1: "",
-    addressLine2: "",
-    state: "",
-    city: "",
-    pincode: "",
-    phone: "",
+    shopName: '',
+    addressLine1: '',
+    addressLine2: '',
+    state: '',
+    city: '',
+    pincode: '',
+    phone: '',
   });
 
   useEffect(() => {
     const fetchedData = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("Session expired. Please login again.");
-        router.push("/"); // Redirect to login page
+        alert('Session expired. Please login again.');
+        router.push('/'); // Redirect to login page
         return;
       }
       const response = await getCompanyName();
@@ -59,7 +59,7 @@ export default function Form() {
     if (!selectedCompanies.find((selected) => selected._id === company._id)) {
       setSelectedCompanies([...selectedCompanies, company]);
     }
-    setSearchTerm("");
+    setSearchTerm('');
     setShowDropDown(false);
   };
 
@@ -90,19 +90,19 @@ export default function Form() {
 
     const response = await createCompany(payload);
     if (response) {
-      alert("Company data created successfully");
+      alert('Company data created successfully');
       setFormData({
-        shopName: "",
-        addressLine1: "",
-        addressLine2: "",
-        state: "",
-        city: "",
-        pincode: "",
-        phone: "",
+        shopName: '',
+        addressLine1: '',
+        addressLine2: '',
+        state: '',
+        city: '',
+        pincode: '',
+        phone: '',
       });
       setSelectedCompanies([]);
     } else {
-      alert("Failed to save data");
+      alert('Failed to save data');
     }
   };
 
@@ -291,7 +291,7 @@ export default function Form() {
         )}
         <div className="flex items-center justify-between mt-6">
           <LogoutButton />
-          <Link href={"/details"} className="text-blue-600 hover:underline">
+          <Link href={'/details'} className="text-blue-600 hover:underline">
             Company Details
           </Link>
         </div>
