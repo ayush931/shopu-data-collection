@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
   await connectToDB();
 
-  const companyNameDetails = await CompayName.find({});
+  const companyNameDetails = await CompayName.find({}, 'name').lean(); // Limit fields and use lean for faster query
 
   if (!companyNameDetails) {
     return NextResponse.json(

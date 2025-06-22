@@ -4,8 +4,10 @@ const companyNameSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Provide company name'],
+    index: true, // Add index for faster queries
   },
 });
 
-const CompanyName = mongoose.models.CompanyName || model('CompanyName', companyNameSchema);
+const CompanyName =
+  mongoose.models.CompanyName || model('CompanyName', companyNameSchema);
 export default CompanyName;
