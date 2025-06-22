@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 
 const companyNameSchema = new Schema({
   name: {
@@ -7,5 +7,5 @@ const companyNameSchema = new Schema({
   },
 });
 
-const CompayName = model('CompanyName', companyNameSchema);
-export default CompayName;
+const CompanyName = mongoose.models.CompanyName || model('CompanyName', companyNameSchema);
+export default CompanyName;

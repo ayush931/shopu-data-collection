@@ -113,6 +113,62 @@ export default function Form() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
+              <label className="block text-sm font-medium mb-1">
+                Company name
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {selectedCompanies.map((company) => (
+                  <span
+                    key={company._id}
+                    className="bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center"
+                  >
+                    {company.name}
+                    <button
+                      type="button"
+                      className="ml-2 text-red-500"
+                      onClick={() => removeSelectedCompany(company._id)}
+                    >
+                      x
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <input
+                type="text"
+                value={searchTerm}
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={handleSearchChange}
+                onFocus={() => setShowDropDown(true)}
+              />
+              {showDropDown && searchTerm && (
+                <div className="bg-white border border-gray-300 rounded shadow mt-1 max-h-40 overflow-y-auto z-10 absolute w-full">
+                  {filteredCompanies.length > 0 ? (
+                    filteredCompanies.slice(0, 50).map((company) => (
+                      <button
+                        key={company._id}
+                        type="button"
+                        className="block w-full text-left px-3 py-2 hover:bg-blue-100"
+                        onClick={() => handleCompanySelect(company)}
+                      >
+                        {company.name}
+                        {selectedCompanies.find(
+                          (select) => select._id === company._id
+                        ) && (
+                          <span className="ml-2 text-xs text-green-600">
+                            (selected)
+                          </span>
+                        )}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-gray-500">
+                      No company found
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div>
               <label
                 htmlFor="shopName"
                 className="block text-sm font-medium mb-1"
@@ -209,62 +265,7 @@ export default function Form() {
               />
             </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Company name
-            </label>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {selectedCompanies.map((company) => (
-                <span
-                  key={company._id}
-                  className="bg-blue-100 text-blue-800 px-2 py-1 rounded flex items-center"
-                >
-                  {company.name}
-                  <button
-                    type="button"
-                    className="ml-2 text-red-500"
-                    onClick={() => removeSelectedCompany(company._id)}
-                  >
-                    x
-                  </button>
-                </span>
-              ))}
-            </div>
-            <input
-              type="text"
-              value={searchTerm}
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onChange={handleSearchChange}
-              onFocus={() => setShowDropDown(true)}
-            />
-            {showDropDown && searchTerm && (
-              <div className="bg-white border border-gray-300 rounded shadow mt-1 max-h-40 overflow-y-auto z-10 absolute w-full">
-                {filteredCompanies.length > 0 ? (
-                  filteredCompanies.slice(0, 50).map((company) => (
-                    <button
-                      key={company._id}
-                      type="button"
-                      className="block w-full text-left px-3 py-2 hover:bg-blue-100"
-                      onClick={() => handleCompanySelect(company)}
-                    >
-                      {company.name}
-                      {selectedCompanies.find(
-                        (select) => select._id === company._id
-                      ) && (
-                        <span className="ml-2 text-xs text-green-600">
-                          (selected)
-                        </span>
-                      )}
-                    </button>
-                  ))
-                ) : (
-                  <div className="px-3 py-2 text-gray-500">
-                    No company found
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"

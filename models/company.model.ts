@@ -32,8 +32,8 @@ const companySchema = new Schema(
 
     companyName: [
       {
-        type: mongoose.Schema.Types.ObjectId, // Change to ObjectId for referencing
-        ref: 'CompanyName', // Reference the CompanyName model
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CompanyName',
       },
     ],
   },
@@ -42,5 +42,6 @@ const companySchema = new Schema(
   }
 );
 
-const Company = mongoose.model('Company', companySchema);
+const Company =
+  mongoose.models.Company || mongoose.model('Company', companySchema);
 export default Company;

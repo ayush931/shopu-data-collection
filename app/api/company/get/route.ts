@@ -1,6 +1,7 @@
 import { connectToDB } from '@/config/dbConnection';
 import { verifyToken } from '@/lib/auth.lib';
 import Company from '@/models/company.model';
+import CompanyName from '@/models/companyName.model'; // Ensure proper import
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -21,9 +22,10 @@ export async function GET(request: NextRequest) {
 
   await connectToDB();
 
-  const companyDetails = await Company.find().populate({
+  const companyDetails = await Company.find({}).populate({
     path: 'companyName',
     select: 'name',
+    model: CompanyName, // Explicitly specify the model
   });
 
   if (!companyDetails) {
