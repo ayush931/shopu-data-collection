@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       email: user.email,
       phone: user.phone,
     },
-    sucess: true,
+    success: true,
     message: "Logged in successfully",
   });
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
   });
 
   return response;

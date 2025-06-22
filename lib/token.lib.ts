@@ -10,6 +10,6 @@ export function generateToken(payload: JwtPayload): string {
     throw new Error("JWT_SECRET environment variable is not defined");
   }
   return jwt.sign(payload, process.env.JWT_SECRET as string, {
-    expiresIn: "7d",
+    expiresIn: "1d", // Token expires in 1 day
   });
 }

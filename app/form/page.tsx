@@ -28,14 +28,12 @@ export default function Form() {
     const fetchedData = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("Please login first");
+        alert("Session expired. Please login again.");
         router.push("/"); // Redirect to login page
         return;
       }
-
       const response = await getCompanyName();
       if (response?.success) {
-        console.log(response.data.companyNameDetails);
         setCompanies(response.data.companyNameDetails);
       }
     };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "@/context/AuthContext";
 import LogoutButton from "@/components/Logout";
 import { useRouter } from "next/navigation";
@@ -9,12 +9,19 @@ import { FaEyeSlash } from "react-icons/fa";
 
 export default function Home() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/form"); // Redirect to form page if token exists
+    }
+  }, []);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,10 +76,12 @@ export default function Home() {
               className="relative w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-9">
-              {
-                showPassword ? <FaEye /> : <FaEyeSlash />
-              }
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-5 top-9"
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
           <button
