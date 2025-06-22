@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   const token = request.cookies.get('token')?.value;
 
@@ -22,7 +22,7 @@ export async function DELETE(
     );
   }
 
-  const { id } = params;
+  const { id } = await context.params;
 
   if (!id) {
     return NextResponse.json(
@@ -47,3 +47,4 @@ export async function DELETE(
     message: 'Company details deleted successfully',
   });
 }
+
