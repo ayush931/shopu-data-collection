@@ -1,7 +1,7 @@
 'use client';
 
 import LogoutButton from '@/components/Logout';
-import { createCompany, getCompanyName } from '@/context/companyDataContext';
+import { createCompany, getCompanyName } from '@/context/companyContext';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,7 @@ export default function Form() {
   type Company = { _id: string; name: string };
 
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [newCompanyName, setNewCompanyName] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [selectedCompanies, setSelectedCompanies] = useState<Company[]>([]);
@@ -77,6 +78,39 @@ export default function Form() {
     setShowDropDown(true);
   };
 
+  const handleAddNewCompany = async () => {
+    if (!newCompanyName.trim()) {
+      toast.error('Please enter a valid company name');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/companyName/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: newCompanyName.trim() }),
+      });
+
+      const result = await response.json();
+      console.log(result);
+      if (result.success) {
+        toast.success('Company name added successfully');
+        setCompanies([
+          ...companies,
+          { _id: result.newCompanyName._id, name: newCompanyName.trim() },
+        ]);
+        setNewCompanyName('');
+      } else {
+        toast.error(result.error || 'Failed to add company name');
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error('An error occurred while adding the company name');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -113,6 +147,24 @@ export default function Form() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6 text-center">Company Form</h2>
+        <div className='mb-5'>
+          <label className="block text-sm font-medium mb-1">
+            Add New company name
+          </label>
+          <input
+            type="text"
+            value={newCompanyName}
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(event) => setNewCompanyName(event.target.value)}
+          />
+          <button
+            type="submit"
+            className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
+            onClick={handleAddNewCompany}
+          >
+            Add Company
+          </button>
+        </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -171,6 +223,7 @@ export default function Form() {
                 </div>
               )}
             </div>
+
             <div>
               <label
                 htmlFor="shopName"

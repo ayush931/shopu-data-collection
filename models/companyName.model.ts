@@ -4,7 +4,7 @@ const companyNameSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Provide company name'],
-    index: true, // Add index for faster queries
+    index: true,
   },
 });
 

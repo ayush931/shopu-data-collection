@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteCompany, getDetails } from '@/context/companyDataContext';
+import { deleteCompany, getDetails } from '@/context/companyContext';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -101,9 +101,10 @@ export default function CompanyDetails() {
                   <div className="bg-green-500 font-bold flex items-center justify-center text-white px-4 py-2 rounded hover:bg-green-600 transition">
                     Update
                   </div>
-                  <div 
+                  <div
                     onClick={() => handleDelete(item._id!)}
-                    className="bg-red-500 font-bold text-white flex items-center justify-center px-4 py-2 rounded hover:bg-red-600 transition">
+                    className="bg-red-500 font-bold text-white flex items-center justify-center px-4 py-2 rounded hover:bg-red-600 transition"
+                  >
                     Delete
                   </div>
                 </div>
