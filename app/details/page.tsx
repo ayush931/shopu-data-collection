@@ -4,6 +4,8 @@ import { deleteCompany, getDetails } from '@/context/companyContext';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Button from '@/components/Button';
+import LogoutButton from '@/components/Logout';
 
 type CompanyData = {
   _id?: string;
@@ -56,11 +58,27 @@ export default function CompanyDetails() {
     }
   };
 
+  const goBackToForm = async () => {
+    router.push('/form');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center">Company Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex justify-around">
+          <div>
+            <Button onClick={() => goBackToForm()} className="bg-blue-500 hover:bg-blue-600 px-5">
+              Form page
+            </Button>
+          </div>
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Company Details
+          </h2>
+          <div>
+            <LogoutButton />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
           {companyData.length > 0 ? (
             companyData.map((item, index) => (
               <div

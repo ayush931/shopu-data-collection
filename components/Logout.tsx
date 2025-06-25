@@ -24,7 +24,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={() => handleSubmit()}
-      className="border border-black px-5 py-1"
+      className="px-5 py-2 rounded-md bg-red-500 hover:bg-red-600 text-white font-[500]"
     >
       Logout
     </button>

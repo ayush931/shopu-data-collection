@@ -7,10 +7,13 @@ import { useRouter } from 'next/navigation';
 import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import Button from '@/components/Button';
+import LoadingButton from '@/components/LoadingButton';
 
 export default function Home() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -36,10 +39,12 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(false);
     const result = await login(formData.email, formData.password);
 
     if (result?.success) {
       toast.success('Login successfull');
+      setLoading(true);
       router.push('/form');
     } else {
       toast.error(result.message);
@@ -87,12 +92,12 @@ export default function Home() {
               {showPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
-          <button
+          <Button
+            className="w-full bg-blue-500 hover:bg-blue-600 "
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
           >
-            Login
-          </button>
+            {loading ? <LoadingButton /> : 'Login'}
+          </Button>
         </form>
         <div className="flex items-center justify-center mt-4">
           <LogoutButton />

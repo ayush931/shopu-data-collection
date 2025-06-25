@@ -1,17 +1,21 @@
 'use client';
 
-import LogoutButton from '@/components/Logout';
 import { createCompany, getCompanyName } from '@/context/companyContext';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
 import toast from 'react-hot-toast';
+import LogoutButton from '@/components/Logout';
+import Button from '@/components/Button';
+import LoadingButton from '@/components/LoadingButton';
 
 export default function Form() {
   const router = useRouter();
   type Company = { _id: string; name: string };
 
+  const [loading, setLoading] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [newCompanyName, setNewCompanyName] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,6 +83,7 @@ export default function Form() {
   };
 
   const handleAddNewCompany = async () => {
+    setLoading(true);
     if (!newCompanyName.trim()) {
       toast.error('Please enter a valid company name');
       return;
@@ -102,6 +107,7 @@ export default function Form() {
           { _id: result.newCompanyName._id, name: newCompanyName.trim() },
         ]);
         setNewCompanyName('');
+        setLoading(false);
       } else {
         toast.error(result.error || 'Failed to add company name');
       }
@@ -113,6 +119,7 @@ export default function Form() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoadingSubmit(true);
 
     const payload = {
       shopName: formData.shopName.trim(),
@@ -138,8 +145,10 @@ export default function Form() {
         phone: '',
       });
       setSelectedCompanies([]);
+      setLoadingSubmit(false);
     } else {
       toast.error('Failed to save data');
+      setLoadingSubmit(false);
     }
   };
 
@@ -147,7 +156,7 @@ export default function Form() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
       <div className="w-full max-w-2xl bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold mb-6 text-center">Company Form</h2>
-        <div className='mb-5'>
+        <div className="mb-5">
           <label className="block text-sm font-medium mb-1">
             Add New company name
           </label>
@@ -157,13 +166,14 @@ export default function Form() {
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             onChange={(event) => setNewCompanyName(event.target.value)}
           />
-          <button
-            type="submit"
-            className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-            onClick={handleAddNewCompany}
-          >
-            Add Company
-          </button>
+          <div className="w-[200px]">
+            <Button
+              className="bg-green-600 hover:bg-green-700 mt-3"
+              onClick={() => handleAddNewCompany()}
+            >
+              {loading ? <LoadingButton /> : 'Add new company name'}
+            </Button>
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -322,12 +332,9 @@ export default function Form() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-          >
-            Submit
-          </button>
+          <Button type="submit" className="bg-blue-500 hover:bg-blue-600">
+            {loadingSubmit ? <LoadingButton /> : 'Submit'}
+          </Button>
         </form>
         {selectedCompanies.length > 0 && (
           <div className="mt-4">
