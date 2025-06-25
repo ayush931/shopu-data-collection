@@ -2,6 +2,7 @@
 
 import { logout } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -9,13 +10,13 @@ export default function LogoutButton() {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      alert('Please login first');
+      toast.error('Please login first');
       return;
     }
     const result = await logout();
 
     if (result?.success) {
-      alert(result.message);
+      toast.success(result.message);
       router.push('/');
     }
   };

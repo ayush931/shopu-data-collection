@@ -71,3 +71,31 @@ export const createCompany = async (formData: Record<string, unknown>) => {
 
   return response.data;
 };
+
+export const deleteCompany = async (id: string) => {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    return {
+      success: false,
+      message: 'Login first'
+    }
+  }
+
+  const response = await axios.delete(`/api/company/delete/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!response) {
+    localStorage.removeItem('token');
+    return {
+      success: false,
+      message: 'Not able to delete the details'
+    }
+  }
+
+  return response.data;
+};

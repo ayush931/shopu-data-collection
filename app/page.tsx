@@ -6,6 +6,7 @@ import LogoutButton from '@/components/Logout';
 import { useRouter } from 'next/navigation';
 import { FaEye } from 'react-icons/fa';
 import { FaEyeSlash } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 export default function Home() {
   const router = useRouter();
@@ -38,8 +39,10 @@ export default function Home() {
     const result = await login(formData.email, formData.password);
 
     if (result?.success) {
-      alert(result.message);
+      toast.success('Login successfull');
       router.push('/form');
+    } else {
+      toast.error(result.message);
     }
   };
 

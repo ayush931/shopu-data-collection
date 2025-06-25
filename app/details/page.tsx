@@ -1,8 +1,9 @@
 'use client';
 
-import { getDetails } from '@/context/companyDataContext';
+import { deleteCompany, getDetails } from '@/context/companyDataContext';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 type CompanyData = {
   _id?: string;
@@ -24,14 +25,14 @@ export default function CompanyDetails() {
     const fetchedData = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Session expired. Please login again.');
+        toast.error('Session expired. Please login again.');
         router.push('/'); // Redirect to login page
         return;
       }
 
       const response = await getDetails();
       if (response?.success) {
-        alert(response.message);
+        toast.success('Company detail fetched');
         console.log(response.data);
         setCompanyData(response.data.companyDetails);
       }
@@ -39,6 +40,21 @@ export default function CompanyDetails() {
 
     fetchedData();
   }, [router]);
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm(
+      'Are you sure you ant to delete the company?'
+    );
+    if (!confirmDelete) return;
+
+    const result = (await deleteCompany(id)) as { success: boolean };
+    if (result.success) {
+      toast.success('Company data deleted successfully');
+      setCompanyData(companyData.filter((company) => company._id !== id));
+    } else {
+      toast.error('Failed to delete company');
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
@@ -80,6 +96,16 @@ export default function CompanyDetails() {
                   {item.companyName && Array.isArray(item.companyName)
                     ? item.companyName.map((company) => company.name).join(', ')
                     : 'No company name selected'}
+                </div>
+                <div className="grid grid-cols-2 gap-10 mt-5">
+                  <div className="bg-green-500 font-bold flex items-center justify-center text-white px-4 py-2 rounded hover:bg-green-600 transition">
+                    Update
+                  </div>
+                  <div 
+                    onClick={() => handleDelete(item._id!)}
+                    className="bg-red-500 font-bold text-white flex items-center justify-center px-4 py-2 rounded hover:bg-red-600 transition">
+                    Delete
+                  </div>
                 </div>
               </div>
             ))

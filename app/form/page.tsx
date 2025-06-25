@@ -5,6 +5,8 @@ import { createCompany, getCompanyName } from '@/context/companyDataContext';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import useDebounce from '@/hooks/useDebounce';
+import toast from 'react-hot-toast';
 
 export default function Form() {
   const router = useRouter();
@@ -12,6 +14,7 @@ export default function Form() {
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [selectedCompanies, setSelectedCompanies] = useState<Company[]>([]);
   const [showDropDown, setShowDropDown] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,7 +31,7 @@ export default function Form() {
     const fetchedData = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Session expired. Please login again.');
+        toast.error('Session expired. Please login again.');
         router.push('/'); // Redirect to login page
         return;
       }
@@ -52,7 +55,7 @@ export default function Form() {
   };
 
   const filteredCompanies = companies.filter((company) =>
-    company.name.toLowerCase().includes(searchTerm.toLowerCase())
+    company.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   );
 
   const handleCompanySelect = (company: Company) => {
@@ -90,7 +93,7 @@ export default function Form() {
 
     const response = await createCompany(payload);
     if (response) {
-      alert('Company data created successfully');
+      toast.success('Company data created successfully');
       setFormData({
         shopName: '',
         addressLine1: '',
@@ -102,7 +105,7 @@ export default function Form() {
       });
       setSelectedCompanies([]);
     } else {
-      alert('Failed to save data');
+      toast.error('Failed to save data');
     }
   };
 
