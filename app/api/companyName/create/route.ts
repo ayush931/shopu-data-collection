@@ -27,6 +27,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Provide the name' }, { status: 400 });
   }
 
+  const checkCompanyName = await CompayName.findOne({ name });
+
+  if (checkCompanyName) {
+    return NextResponse.json(
+      { error: 'Company name already exists!!!' },
+      { status: 400 }
+    )
+  }
+
   const newCompanyName = await CompayName.create({
     name,
   });
