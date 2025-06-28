@@ -2,7 +2,7 @@
 
 import { createCompany } from '@/context/companyContext';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
 import toast from 'react-hot-toast';
@@ -11,7 +11,21 @@ import Button from '@/components/Button';
 import LoadingButton from '@/components/LoadingButton';
 import { getCompanyName } from '@/context/companyNameContext';
 
-export default function Form() {
+export default function FormWrapper() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <Form />
+    </Suspense>
+  );
+}
+
+function Form() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
@@ -404,10 +418,7 @@ export default function Form() {
               {loadingSubmit ? <LoadingButton /> : 'Update'}
             </Button>
           ) : (
-            <Button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600"
-            >
+            <Button type="submit" className="bg-blue-500 hover:bg-blue-600">
               {loadingSubmit ? <LoadingButton /> : 'Submit'}
             </Button>
           )}
