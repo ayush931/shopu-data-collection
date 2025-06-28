@@ -22,26 +22,32 @@ export const getDetails = async () => {
   };
 };
 
-export const getCompanyName = async () => {
-  const response = await fetch('/api/companyName/get', {
-    method: 'GET',
-    credentials: 'include',
-  });
+export const getDetailsById = async (id: string) => {
+  const token = localStorage.getItem('token');
 
-  if (!response.ok) {
+  if (!token) {
     return {
-      success: false,
-      message: 'Failed to fetch company details',
+      success: true,
+      message: 'Login first',
     };
   }
 
-  const data = await response.json();
+  const response = await axios.get(`/api/company/get/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
 
-  return {
-    success: true,
-    message: 'Company Names is fetched',
-    data,
-  };
+  if (!response) {
+    localStorage.removeItem('token');
+    return {
+      success: false,
+      message: 'Unable to recognize user',
+    };
+  }
+
+  return response.data;
 };
 
 export const createCompany = async (formData: Record<string, unknown>) => {
@@ -78,23 +84,53 @@ export const deleteCompany = async (id: string) => {
   if (!token) {
     return {
       success: false,
-      message: 'Login first'
-    }
+      message: 'Login first',
+    };
   }
 
   const response = await axios.delete(`/api/company/delete/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  })
+      'Content-Type': 'application/json',
+    },
+  });
 
   if (!response) {
     localStorage.removeItem('token');
     return {
       success: false,
-      message: 'Not able to delete the details'
-    }
+      message: 'Not able to delete the details',
+    };
+  }
+
+  return response.data;
+};
+
+export const updateDetails = async (
+  id: string,
+  formData: Record<string, unknown>
+) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return {
+      success: false,
+      message: 'Login first',
+    };
+  }
+
+  const response = await axios.put(`/api/company/update/${id}`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response) {
+    localStorage.removeItem('token');
+    return {
+      success: false,
+      message: 'Not able to delete the details',
+    };
   }
 
   return response.data;

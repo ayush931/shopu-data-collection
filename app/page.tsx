@@ -38,13 +38,13 @@ export default function Home() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
-    setLoading(false);
     const result = await login(formData.email, formData.password);
 
     if (result?.success) {
       toast.success('Login successfull');
-      setLoading(true);
+      setLoading(false);
       router.push('/form');
     } else {
       toast.error(result.message);

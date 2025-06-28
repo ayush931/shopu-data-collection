@@ -62,6 +62,10 @@ export default function CompanyDetails() {
     router.push('/form');
   };
 
+  const handleUpdate = async (id: string) => {
+    router.push(`/form?id=${id}`)
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
@@ -116,7 +120,9 @@ export default function CompanyDetails() {
                     : 'No company name selected'}
                 </div>
                 <div className="grid grid-cols-2 gap-10 mt-5">
-                  <div className="bg-green-500 font-bold flex items-center justify-center text-white px-4 py-2 rounded hover:bg-green-600 transition">
+                  <div
+                    onClick={() => handleUpdate(item._id!)}
+                    className="bg-green-500 font-bold flex items-center justify-center text-white px-4 py-2 rounded hover:bg-green-600 transition">
                     Update
                   </div>
                   <div

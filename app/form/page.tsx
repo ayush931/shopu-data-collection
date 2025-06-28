@@ -1,17 +1,20 @@
 'use client';
 
-import { createCompany, getCompanyName } from '@/context/companyContext';
+import { createCompany } from '@/context/companyContext';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
 import toast from 'react-hot-toast';
 import LogoutButton from '@/components/Logout';
 import Button from '@/components/Button';
 import LoadingButton from '@/components/LoadingButton';
+import { getCompanyName } from '@/context/companyNameContext';
 
 export default function Form() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
   type Company = { _id: string; name: string };
 
   const [loading, setLoading] = useState(false);
@@ -40,14 +43,40 @@ export default function Form() {
         router.push('/'); // Redirect to login page
         return;
       }
-      const response = await getCompanyName();
-      if (response?.success) {
-        setCompanies(response.data.companyNameDetails);
+
+      if (id) {
+        const response = await fetch(`/api/company/get/${id}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setFormData({
+            shopName: result.company.shopName,
+            addressLine1: result.company.addressLine1,
+            addressLine2: result.company.addressLine2,
+            state: result.company.state,
+            city: result.company.city,
+            pincode: result.company.pincode,
+            phone: result.company.phone,
+          });
+          setSelectedCompanies(result.company.companyName);
+        } else {
+          toast.error(result.error || 'Failed to fetch company details');
+        }
+      }
+
+      const companyNamesResponse = await getCompanyName();
+      if (companyNamesResponse?.success) {
+        setCompanies(companyNamesResponse.data.companyNameDetails);
       }
     };
 
     fetchedData();
-  }, [router]);
+  }, [router, id]);
 
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -127,8 +156,8 @@ export default function Form() {
       addressLine2: formData.addressLine2.trim(),
       state: formData.state.trim(),
       city: formData.city.trim(),
-      pincode: formData.pincode.trim(),
-      phone: formData.phone.trim(),
+      pincode: formData.pincode,
+      phone: formData.phone,
       companyName: selectedCompanies.map((company) => company._id),
     };
 
@@ -150,6 +179,40 @@ export default function Form() {
       toast.error('Failed to save data');
       setLoadingSubmit(false);
     }
+  };
+
+  const handleUpdate = async () => {
+    setLoadingSubmit(true);
+
+    const payload = {
+      shopName: formData.shopName.trim(),
+      addressLine1: formData.addressLine1.trim(),
+      addressLine2: formData.addressLine2.trim(),
+      state: formData.state.trim(),
+      city: formData.city.trim(),
+      pincode: formData.pincode,
+      phone: formData.phone,
+      companyName: selectedCompanies.map((company) => company._id),
+    };
+
+    const response = await fetch(`/api/company/update/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      toast.success('Company data updated successfully');
+      router.push('/details');
+    } else {
+      toast.error(result.error || 'Failed to update company details');
+    }
+
+    setLoadingSubmit(false);
   };
 
   return (
@@ -332,9 +395,22 @@ export default function Form() {
             </div>
           </div>
 
-          <Button type="submit" className="bg-blue-500 hover:bg-blue-600">
-            {loadingSubmit ? <LoadingButton /> : 'Submit'}
-          </Button>
+          {id ? (
+            <Button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-600"
+              onClick={() => handleUpdate()}
+            >
+              {loadingSubmit ? <LoadingButton /> : 'Update'}
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              {loadingSubmit ? <LoadingButton /> : 'Submit'}
+            </Button>
+          )}
         </form>
         {selectedCompanies.length > 0 && (
           <div className="mt-4">
