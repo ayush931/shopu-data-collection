@@ -22,6 +22,8 @@ type CompanyData = {
 export default function CompanyDetails() {
   const router = useRouter();
   const [companyData, setCompanyData] = useState<CompanyData[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState<CompanyData[]>([]);
 
   useEffect(() => {
     const fetchedData = async () => {
@@ -37,6 +39,7 @@ export default function CompanyDetails() {
         toast.success('Company detail fetched');
         console.log(response.data);
         setCompanyData(response.data.companyDetails);
+        setFilteredData(response.data.companyDetails); // Initialize filtered data
       }
     };
 
@@ -45,7 +48,7 @@ export default function CompanyDetails() {
 
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
-      'Are you sure you ant to delete the company?'
+      'Are you sure you want to delete the company?'
     );
     if (!confirmDelete) return;
 
@@ -53,6 +56,7 @@ export default function CompanyDetails() {
     if (result.success) {
       toast.success('Company data deleted successfully');
       setCompanyData(companyData.filter((company) => company._id !== id));
+      setFilteredData(filteredData.filter((company) => company._id !== id));
     } else {
       toast.error('Failed to delete company');
     }
@@ -63,15 +67,31 @@ export default function CompanyDetails() {
   };
 
   const handleUpdate = async (id: string) => {
-    router.push(`/form?id=${id}`)
-  }
+    router.push(`/form?id=${id}`);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const term = e.target.value.toLowerCase();
+  setSearchTerm(term);
+  const filtered = companyData.filter(
+    (item) =>
+      item.shopName?.toLowerCase().includes(term) || // Search by shop name
+      item.companyName?.some((company) => // Search by company name
+        company.name.toLowerCase().includes(term)
+      )
+  );
+  setFilteredData(filtered);
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-2">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
         <div className="flex justify-around">
           <div>
-            <Button onClick={() => goBackToForm()} className="bg-blue-500 hover:bg-blue-600 px-5">
+            <Button
+              onClick={() => goBackToForm()}
+              className="bg-blue-500 hover:bg-blue-600 px-5"
+            >
               Form page
             </Button>
           </div>
@@ -82,9 +102,18 @@ export default function CompanyDetails() {
             <LogoutButton />
           </div>
         </div>
+        <div className="mb-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search by shop name or company name"
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
-          {companyData.length > 0 ? (
-            companyData.map((item, index) => (
+          {filteredData.length > 0 ? (
+            filteredData.map((item, index) => (
               <div
                 key={index}
                 className="bg-gray-50 rounded-lg p-4 shadow mb-4 flex flex-col gap-2"
@@ -122,7 +151,8 @@ export default function CompanyDetails() {
                 <div className="grid grid-cols-2 gap-10 mt-5">
                   <div
                     onClick={() => handleUpdate(item._id!)}
-                    className="bg-green-500 font-bold flex items-center justify-center text-white px-4 py-2 rounded hover:bg-green-600 transition">
+                    className="bg-green-500 font-bold flex items-center justify-center text-white px-4 py-2 rounded hover:bg-green-600 transition"
+                  >
                     Update
                   </div>
                   <div
